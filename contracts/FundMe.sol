@@ -5,6 +5,7 @@ pragma solidity ^0.8;
 // of data from external datafeeds depending on the interface
 
 import "./PriceConverter.sol";
+import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 contract FundMe {
 
@@ -14,10 +15,12 @@ contract FundMe {
     // Ensuring that the address that deploys the contract is the owner of that
     // contract
 
+    AggregatorV3Interface public priceFeed;
 
-    //
+    // Adding the address of the price feed as an argument to the constructor, so that when the network is changed, to still get the same functionality only the "pricefeed" address would have to be changed
     constructor(address _priceFeed){
         owner =  msg.sender;
+        priceFeed = AggregatorV3Interface(_priceFeed);
     }
 
     // Hmm I don't really get this 
@@ -41,7 +44,9 @@ contract FundMe {
         // msg.value is in wei
         
         // msg.value.getConversionRate() 
-        require(msg.value.getConversionRate() > minimumUsd, "Didnt send enough");
+        /* The msg.value acts as the first argument to the getConversionRate method
+    adding a parameter in the brackets will act as a second*/
+        require(msg.value.getConversionRate(priceFeed) > minimumUsd, "Didnt send enough");
 
         // Adding the address of the funders to the funders array;
         funders.push(msg.sender);
