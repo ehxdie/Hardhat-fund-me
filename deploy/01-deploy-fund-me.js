@@ -12,16 +12,17 @@ module.exports = async (hre) => {
     // executing the getNamedAccounts method
     const { deployer } = await getNamedAccounts();
 
-    // getting chain id of network
+    // getting chain id of network that we have chosen to deploy the contract to
     const chainID = network.config.chainId 
 
-    // Setting
+    // USING THE networkconfig  
+    const ethUsdPriceFeedAddress = networkConfig[chainID]["ethUsdPriceFeed"];
 
     // using the features of the "hardhat-deploy" and "hardhat-deploy-ethers" packages
     // Instead of using a contract factory 
     const fundMe = await deploy("FundMe",{
           from: deployer,
-          args: [], // This where the constructor arguments would be placed
+          args: [ethUsdPriceFeedAddress], // This where the constructor arguments would be placed
 
 
     }) 
