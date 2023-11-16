@@ -1,5 +1,6 @@
 // Declaring the deploy function
 const { hre, network } = require("hardhat");
+const { networkConfig } = require("../helper-hardhat-config");
 
 module.exports = async (hre) => {
     // Getting the following two methods from the hardhat runtime environment
@@ -13,6 +14,17 @@ module.exports = async (hre) => {
 
     // getting chain id of network
     const chainID = network.config.chainId 
+
+    // Setting
+
+    // using the features of the "hardhat-deploy" and "hardhat-deploy-ethers" packages
+    // Instead of using a contract factory 
+    const fundMe = await deploy("FundMe",{
+          from: deployer,
+          args: [], // This where the constructor arguments would be placed
+
+
+    }) 
 
 
 } 
