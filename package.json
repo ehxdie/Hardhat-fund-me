@@ -1,0 +1,25 @@
+{
+  "name": "hardhat-fund-me",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ehxdie/Hardhat-fund-me.git"
+  },
+  "author": "Edidiong Ephraim",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ehxdie/Hardhat-fund-me/issues"
+  },
+  "homepage": "https://github.com/ehxdie/Hardhat-fund-me#readme",
+  "dependencies": {
+    "hardhat": "^2.19.1"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0"
+  }
+}
