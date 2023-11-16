@@ -3,8 +3,8 @@ pragma solidity ^0.8;
 
 // This interface is provided by chainlink and allows for the getting
 // of data from external datafeeds depending on the interface
-import "contracts/PriceConverter.sol";
 
+import "./PriceConverter.sol";
 
 contract FundMe {
 
@@ -14,7 +14,9 @@ contract FundMe {
     // Ensuring that the address that deploys the contract is the owner of that
     // contract
 
-    constructor(){
+
+    //
+    constructor(address _priceFeed){
         owner =  msg.sender;
     }
 
