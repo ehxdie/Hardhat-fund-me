@@ -3,7 +3,12 @@ require("dotenv").config();
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-  solidity: "0.8.19",
+  solidity: {
+    compilers: [
+      { version: "0.8.19" },
+      { version: "0.6.6" },
+    ]       
+  },
   defaultNetwork: "hardhat",
   networks: {
     sepolia: {
