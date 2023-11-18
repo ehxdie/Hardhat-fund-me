@@ -1,6 +1,6 @@
 // Declaring the deploy function
 const { hre, network } = require("hardhat");
-const { networkConfig } = require("../helper-hardhat-config");
+const { networkConfig, developmentChains } = require("../helper-hardhat-config");
 
 module.exports = async (hre) => {
     // Getting the following two methods from the hardhat runtime environment
@@ -16,7 +16,17 @@ module.exports = async (hre) => {
     const chainID = network.config.chainId 
 
     // USING THE networkconfig  
-    const ethUsdPriceFeedAddress = networkConfig[chainID]["ethUsdPriceFeed"];
+    let ethUsdPriceFeedAddress;
+    
+    // Handling cases where the network deployed to is not in the networkconfig file
+    if (developmentChains.includes(network.name)) {
+        // It is expected that the contract ould have been deployed 
+        const ethUsdAggregator = await deployments.get("MockV3Aggregator");
+        ethUsdPriceFeedAddress = ethUsdAggregator.address;
+    } else {
+        ethUsdPriceFeedAddress = networkConfig[chainID]["ethUsdPriceFeed"];
+    }
+
 
     // using the features of the "hardhat-deploy" and "hardhat-deploy-ethers" packages
     // Instead of using a contract factory 
@@ -29,3 +39,4 @@ module.exports = async (hre) => {
 
 
 } 
+module.exports.tags = ["all", "fundme"];
