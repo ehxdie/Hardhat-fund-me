@@ -5,7 +5,7 @@ const { developmentChains, decimals, initialAnswer } = require("../helper-hardha
 const { tasks } = require("hardhat");
 const { task } = require("hardhat/config");
 
-task("deploy", "deploying the contract", async ({ getNamedAccounts, deployments }) {
+module.exports =  async ({ getNamedAccounts, deployments }) => {
     
         // Getting the following two methods from the hardhat runtime environment
 
@@ -29,7 +29,7 @@ task("deploy", "deploying the contract", async ({ getNamedAccounts, deployments 
             log("Mocks deployed")
 
         }
-}) 
+    }
 
 
 

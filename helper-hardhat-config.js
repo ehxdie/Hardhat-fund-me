@@ -1,3 +1,6 @@
+require("@nomicfoundation/hardhat-toolbox");
+require("dotenv").config();
+
 // This config file will allow for the interaction with the aggregate interface depending on the network being used
 
 const networkConfig = {
