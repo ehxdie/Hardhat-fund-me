@@ -16,6 +16,8 @@ module.exports = {
     sepolia: {
       url: process.env.RPC_URL,
       accounts: [process.env.PRIVATE_KEY],
+      blockConfirmations: 6,
+      chainId: 11155111, 
     },
     localhost: {
       url: "http://127.0.0.1:8545/",

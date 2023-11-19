@@ -1,7 +1,7 @@
 // Declaring the deploy function
 const { hre, network, run } = require("hardhat");
 const { networkConfig, developmentChains } = require("../helper-hardhat-config");
-
+const { verify } = require("../utils/verify");
 
 module.exports = async (hre) => {
     // Getting the following two methods from the hardhat runtime environment
@@ -14,7 +14,7 @@ module.exports = async (hre) => {
     const { deployer } = await getNamedAccounts();
 
     // getting chain id of network that we have chosen to deploy the contract to
-    const chainID = network.config.chainId 
+    const chainID = network.config.chainId; 
 
     // USING THE networkconfig  
     let ethUsdPriceFeedAddress;
@@ -33,19 +33,22 @@ module.exports = async (hre) => {
     // Instead of using a contract factory 
     const fundMe = await deploy("FundMe",{
           from: deployer,
-          args: [ethUsdPriceFeedAddress] // This where the constructor arguments would be placed
-          
+          args: [ethUsdPriceFeedAddress], // This where the constructor arguments would be placed
+          waitConfirmations: network.config.blockConfirmations
 
     });
     log("------- Test-net being deployed to"); 
+    console.log(fundMe.address);
 
     // Handling verification
     // first checking if the network being deployed to is a testnet
-    if (!developmentChains.includes(network.name)){
-        
-        })
-    }
+   /* if (!developmentChains.includes(network.name)){
+        // the verification takes in the contract address and the constructor argumentsd
+       await verify(fundMe.address, ethUsdPriceFeedAddress); 
+     }*/
+    
+}
 
 
-} 
+ 
 module.exports.tags = ["all", "fundme"];

@@ -5,10 +5,10 @@ const verify = async (contractAddress, args) => {
     try {
         await run ("verify:verify", {
             address: contractAddress,
-            constructorArguments: args
+            constructorArguments: [args]
         })
     } catch (e) {
-        if (e.message.toLowerCase().include("already verified")){
+        if (e.message.toLowerCase().includes("already verified")){
             console.log("already verified")
         } else {
             console.log(e)
