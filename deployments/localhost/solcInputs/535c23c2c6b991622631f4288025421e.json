@@ -1,0 +1,41 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n\ninterface AggregatorV3Interface {\n  function decimals() external view returns (uint8);\n\n  function description() external view returns (string memory);\n\n  function version() external view returns (uint256);\n\n  function getRoundData(\n    uint80 _roundId\n  ) external view returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound);\n\n  function latestRoundData()\n    external\n    view\n    returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound);\n}\n"
+    },
+    "contracts/FundMe.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8;\n\n// This interface is provided by chainlink and allows for the getting\n// of data from external datafeeds depending on the interface\n\nimport \"./PriceConverter.sol\";\nimport \"@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol\";\n\ncontract FundMe {\n\n    // Setting up a variable that will host the owners address\n    address public owner;\n\n    // Ensuring that the address that deploys the contract is the owner of that\n    // contract\n\n    AggregatorV3Interface public priceFeed;\n\n    // Adding the address of the price feed as an argument to the constructor, so that when the network is changed, to still get the same functionality only the \"pricefeed\" address would have to be changed\n    constructor(address _priceFeed){\n        owner =  msg.sender;\n        priceFeed = AggregatorV3Interface(_priceFeed);\n    }\n\n    // Hmm I don't really get this \n    using PriceConverter for uint256;\n\n    // Setting the minimum amount that can be sent to this contract\n    uint256 minimumUsd = 10 * 1e18;\n\n    // Array that will hold the addresses of who has funded the contract\n    address[] public funders;\n\n    // To get the amount that is being sent by an address\n    mapping(address => uint256) public addressToAmount;\n\n    // Funding function\n    /* Different Individuals can fund the contract*/\n\n    function fund() public payable {\n        // Ensuring the amount  sent to the contract is > 1eth\n        // 1e18 is the representation of 1eth in wei\n        // msg.value is in wei\n        \n        // msg.value.getConversionRate() \n        /* The msg.value acts as the first argument to the getConversionRate method\n    adding a parameter in the brackets will act as a second*/\n        require(msg.value.getConversionRate(priceFeed) > minimumUsd, \"Didnt send enough\");\n\n        // Adding the address of the funders to the funders array;\n        funders.push(msg.sender);\n\n        // Keeping track of how much each address sends\n        addressToAmount[msg.sender] = msg.value;\n\n    }\n\n    // Functions for Getting prices and converting from eth to usd \n    // and vice versa\n\n    \n    \n    // Withdrawal function\n    /* The owner of the contract can withdraw the funds sent to an \n    Individual addresss */\n\n\n    function withdraw () public onlyOwner{\n        // This ensures that only the owner can withdraw\n        require(msg.sender == owner, \"You can not withdraw\");\n\n        // When the owner of the contract withdraws from the contract then the array\n        // that hosts the amount sent should be set to zero\n         for (uint256 funderIndex = 0; funderIndex < funders.length; funderIndex++) \n         {\n             address fundersAddress = funders[funderIndex];\n             addressToAmount[fundersAddress] = 0;\n         }\n\n        // resetting the funders an array\n        funders = new address[](0);\n\n        // withdrawing the funds\n\n        // transfer\n        /*\n        When transferring to another address first the address\n        must be made payable, after then the <.transfer()> method\n        is used\n        payable(msg.sender).transfer(address(this).balance);\n\n        // send\n        bool sendTransfer = payable(msg.sender).send(address(this).balance);\n        require(sendTransfer,\"Transfer has not gone through\"); */\n\n        // call\n        (bool callSuccess, ) = payable(msg.sender).call{value: address(this).balance}(\"\");\n        require(callSuccess, \"Call failed\");\n    }\n\n    modifier onlyOwner{\n        require(msg.sender == owner, \"You can not withdraw\");\n        _; \n    }\n\n\n}\n "
+    },
+    "contracts/PriceConverter.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8;\n\nimport \"@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol\";\n\nlibrary PriceConverter {\n\n\n    function getPrice (AggregatorV3Interface _priceFeed) internal view returns(uint256) {\n        // Address of price feed contract 0x694AA1769357215DE4FAC081bf1f309aDC325306\n        // Using the interface to connect to a datafeed that exist on the sempoli testnet\n\n        //AggregatorV3Interface priceFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306);\n\n        // The <lastestRoundData()> method is used to get lastest prices of eth\n        (,int256 price, , ,) = _priceFeed.latestRoundData();\n\n        /* to ensure the price in usd == msg.value (i dont 100% \n        get but they should be similar in decimal places)\n\n        The interface <lastestRoundData()> method, returns eth price\n        to 8 decimal places, but msg.value is in wei, so to the eth price\n        is converted to wei\n        */\n\n        return uint256(price * 1e10);\n    }\n\n    function getConversionRate (uint256 _ethAmount, AggregatorV3Interface _priceFeed) internal view returns(uint256){\n        // Getting the ethereum price by calling the get price function\n        uint256 ethPrice = getPrice(_priceFeed);\n        // Converting from wei to usd\n        uint256 ethAmountInUsd = (ethPrice * _ethAmount)/ 1e18;\n        return ethAmountInUsd;\n    }\n\n}\n "
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": false,
+      "runs": 200
+    },
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}
