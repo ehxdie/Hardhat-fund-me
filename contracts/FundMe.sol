@@ -17,6 +17,10 @@ contract FundMe {
 
     AggregatorV3Interface public priceFeed;
 
+    function returnpriceFeed () public view returns (AggregatorV3Interface) {
+        return priceFeed;
+    } 
+
     // Adding the address of the price feed as an argument to the constructor, so that when the network is changed, to still get the same functionality only the "pricefeed" address would have to be changed
     constructor(address _priceFeed){
         owner =  msg.sender;

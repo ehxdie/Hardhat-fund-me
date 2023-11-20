@@ -18,6 +18,7 @@
   "homepage": "https://github.com/ehxdie/Hardhat-fund-me#readme",
   "dependencies": {
     "@chainLink/contracts": "npm:@chainlink/contracts@^0.8.0",
+    "chai": "^4.3.10",
     "hardhat": "^2.19.1"
   },
   "devDependencies": {
