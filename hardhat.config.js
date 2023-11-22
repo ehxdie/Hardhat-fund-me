@@ -2,6 +2,8 @@ require("hardhat-gas-reporter");
 require("dotenv").config();
 require("solidity-coverage");
 require("hardhat-deploy");
+require("@nomiclabs/hardhat-ethers");
+require("@nomicfoundation/hardhat-ethers");
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {

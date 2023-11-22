@@ -2,6 +2,9 @@
  * @dev this script will be responsible for the unit tests of the fundme contract
  * 
  */
+require("@nomiclabs/hardhat-ethers");
+require("@nomicfoundation/hardhat-ethers");
+
 const { deployments, ethers, getNamedAccounts } = require("hardhat");
 const { expect } = require("chai");
 
@@ -16,17 +19,16 @@ describe("fundme", async() => {
         deployer = (await getNamedAccounts()).deployer;
 
         // This kind of deploys the contract using the tags on all the deploy scripts
-        await deployments.fixture(["all"])
+        await deployments.fixture(["all"]);
         
         // This will allow for interaction with the smart contract
         fundMe = await ethers.getContract("FundMe", deployer);
         mockv3aggregator = await ethers.getContract("MockV3Aggregator",deployer);
 
         /* Instead of all that nonsense */
-        const fundMeContractFactory = await ethers.getContractFactory("FundMe");
-        const Mockv3ContractFactory = await ethers.getContractFactory("MockV3Aggregator");
+        //const fundMeContractFactory = await ethers.getContractFactory("FundMe");
+        //const Mockv3ContractFactory = await ethers.getContractFactory("MockV3Aggregator");
 
-        fundMe = fundMeContractFactory.deploy()
 
     })
 
@@ -36,7 +38,10 @@ describe("fundme", async() => {
     describe("constructor", async function() {
         it("sets the aggregator address correctly", async function(){
             const response = await fundMe.returnpriceFeed();
-            expect(response).to.equal(mockv3aggregator.address);
+            console.log(response);
+            const testAddress = await mockv3aggregator.getAddress();
+            console.log(testAddress);
+            expect(response).to.equal(testAddress);
              
 
         })

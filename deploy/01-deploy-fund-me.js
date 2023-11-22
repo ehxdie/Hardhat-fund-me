@@ -38,7 +38,7 @@ module.exports = async (hre) => {
 
     });
     log("------- Test-net being deployed to"); 
-    console.log(fundMe.address);
+    console.log("Fund me = " + fundMe.address);
 
     // Handling verification
     // first checking if the network being deployed to is a testnet

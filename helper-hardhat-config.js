@@ -2,7 +2,8 @@ require("@nomicfoundation/hardhat-toolbox");
 require("dotenv").config();
 
 // This config file will allow for the interaction with the aggregate interface depending on the network being used
-
+require("@nomiclabs/hardhat-ethers");
+require("@nomicfoundation/hardhat-ethers");
 const networkConfig = {
     11155111 : {
         name: "sepolia",

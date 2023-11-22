@@ -18,17 +18,19 @@ module.exports =  async ({ getNamedAccounts, deployments }) => {
         // getting chain id of network that we have chosen to deploy the contract to
         const chainID = network.config.chainId;
 
+        let mocks
         // Figuring out deploying the mock contract
         // if the chain id(or name in this case) deployed to is in the developmentChains array deploy to that chain
         if (developmentChains.includes(network.name)) {
             log("Local network detected!");
-            await deploy("MockV3Aggregator", {
+            mocks = await deploy("MockV3Aggregator", {
                 from: deployer,
                 args: [decimals, initialAnswer]
             });
             log("Mocks deployed")
 
         }
+        console.log("Mock contract address = " + mocks.address);
     }
 
 
