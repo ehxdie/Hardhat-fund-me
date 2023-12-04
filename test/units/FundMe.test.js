@@ -14,7 +14,7 @@ describe("fundme", async() => {
     let mockv3aggregator
     beforeEach(async function (){
         /* Contract deployment */
-
+        /* Trying something different*/
         // Getting the deployer for some reason
         deployer = (await getNamedAccounts()).deployer;
 
